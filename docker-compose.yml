@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  nuxt:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # コンテナ起動時のコマンド
+    #TODO フォルダ名を環境変数化
+    command: >
+      bash -c "cd wheather_express_docker
+      && npm run dev"
+    # ホストOSとコンテナ内でソースコードを共有
+    volumes:
+      - .:/app:cached
+    ports:
+      - "3010:3000"
+    tty: true
