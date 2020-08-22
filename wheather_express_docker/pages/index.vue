@@ -6,7 +6,7 @@
         test-api
       </h1>
       <div>
-        {{ test }}
+        <!-- {{ test }} -->
         <div class="links">
           <a
             href="/users"
@@ -21,13 +21,27 @@
 </template>
 <script>
 export default {
-  async asyncData ({ $http }) {
-    const test = await $http.$get('/api/test')
+  data () {
     return {
-      test
+    }
+  },
+  mounted () {
+    if (process.browser) {
+      console.log(navigator)
     }
   }
 }
+// export default {
+//   async asyncData ({ $http }) {
+//     const test = await $http.$get('/api/test')
+//     return {
+//       test
+//     }
+//   },
+//   mounted: function(){
+//     console.log('mounted')
+//   }
+// }
 </script>
 
 <style scoped>
