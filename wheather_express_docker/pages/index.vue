@@ -23,11 +23,68 @@
 export default {
   data () {
     return {
+      lon: null,
+      lat: null,
+      units: null,
+      appid: null,
+
+      temp: null,
+
+      tempratureDescription: null,
+      tempratureDegree: null,
+      locationTimezone: null,
+      wheatherIconSrc: null,
+      degreeSection: null,
+      degreeSpan: "C",
     }
   },
   mounted () {
     if (process.browser) {
-      console.log(navigator)
+      if ( navigator.geolocation ) {
+        navigator.geolocation.getCurrentPosition(position => {
+          console.log(position)
+          this.lon = position.coords.longitude;
+          this.lat = position.coords.latitude;
+          this.appid = "9aa48215a10b18b7de567a747bb16e39";
+          this.units = "metric"
+          const api = `https://api.openweathermap.org/data/2.5/weather?lat=${this.lat}&lon=${this.lon}&units=${this.units}&appid=${this.appid}`
+          fetch(api)
+            .then(response => {
+              return response.json();
+            })
+            .then(data => {
+              console.log(data)
+              this.temp = data.main.temp;
+              const description = data.weather[0].description;
+
+              this.tempratureDegree = this.temp;
+              this.tempratureDescription = description;
+
+              const country = data.sys.country
+              const name = data.name
+            
+              this.locationTimezone = `${country}/${name}`;
+              const icon = data.weather[0].icon;
+
+              this.wheatherIconSrc = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+            })
+        });
+      }
+    } else {
+      locationTimezone = "hey dis is not working because resons"
+    }
+  },
+  methods: {
+    changeDegree(){
+      console.log(this.degreeSpan)
+      if(this.degreeSpan === "C"){
+        this.degreeSpan = "F";
+        let farenheit = (this.temp) * (9 / 5) + 32
+        this.tempratureDegree = Math.floor(farenheit);
+      } else {
+        this.degreeSpan = "C";
+        this.tempratureDegree = this.temp;
+      }
     }
   }
 }
