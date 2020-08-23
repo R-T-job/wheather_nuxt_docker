@@ -1,4 +1,4 @@
-ブラウザのADsenceをOFFしてください
+ブラウザのADsenceをOFFしてください。URL:  
 https://r-t-wheather-app.web.app/
 
 # init
