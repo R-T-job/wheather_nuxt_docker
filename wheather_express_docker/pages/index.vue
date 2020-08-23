@@ -48,21 +48,23 @@ export default {
             }
           }).then(response => {
             console.log(response)
+            const resDate = response.data
             
-            // 
-            this.temperature.tempCentigrade = response.data.main.temp
+            // 気温取得
+            this.temperature.tempCentigrade = resDate.main.temp
             this.temperature.tempratureDegree = this.temperature.tempCentigrade;
 
-            const description = response.data.weather[0].description;
+            // 天気詳細取得
+            const description = resDate.weather[0].description;
             this.temperature.tempratureDescription = description;
 
             //　国、地域名取得
-            const country = response.data.sys.country
-            const name = response.data.name
+            const country = resDate.sys.country
+            const name = resDate.name
             // 地域ごとの時間および天気
             this.location.locationTimezone = `${country}/${name}`;
 
-            const icon = response.data.weather[0].icon;
+            const icon = resDate.weather[0].icon;
             this.location.wheatherIconSrc = `http://openweathermap.org/img/wn/${icon}@2x.png`;
           })
           .catch(response => console.log(response))
