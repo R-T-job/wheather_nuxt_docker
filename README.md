@@ -1,3 +1,4 @@
+ブラウザのADsenceをOFFしてください
 
 # init
 ### docker-compose編集
