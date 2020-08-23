@@ -1,20 +1,25 @@
 <template>
   <div class="container">
-    <div class="location">
-      <h1 class="location-timezone">{{ locationTimezone }}</h1>
-      <img class="wheather-icon" :src="wheatherIconSrc">
-    </div>
-    <div class="temperature" @click="changeDegree()">
-      <div class="degree-section">
-        <h2 class="temprature-degree">{{ tempratureDegree }}</h2>
-        <span>{{ degreeSpan }}</span>
+    <div>
+      <h1 class="title">
+        test-api
+      </h1>
+      <div>
+        <!-- {{ test }} -->
+        <div class="links">
+          <a
+            href="/users"
+            class="button--green"
+          >
+            Users List
+          </a>
+        </div>
       </div>
-      <div class="temprature-description">{{ tempratureDescription }}</div>
     </div>
   </div>
 </template>
-
 <script>
+import axios from 'axios';
 export default {
   data () {
     return {
@@ -34,13 +39,16 @@ export default {
     }
   },
   mounted () {
+    const data = this.asyncData()
+    console.log(data)
     if (process.browser) {
+      const data = this.asyncData(navigator)
       if ( navigator.geolocation ) {
         navigator.geolocation.getCurrentPosition(position => {
           console.log(position)
           this.lon = position.coords.longitude;
           this.lat = position.coords.latitude;
-          this.appid = process.env.appid;
+          this.appid = "9aa48215a10b18b7de567a747bb16e39";
           this.units = "metric"
           const api = `https://api.openweathermap.org/data/2.5/weather?lat=${this.lat}&lon=${this.lon}&units=${this.units}&appid=${this.appid}`
           fetch(api)
@@ -70,6 +78,15 @@ export default {
     }
   },
   methods: {
+    async asyncData (navigator) {
+      console.log(navigator)
+      let a = axios.get('/user/test', {
+              params: {
+                // ここにクエリパラメータを指定する
+                navigator: navigator
+              }
+            });
+    },
     changeDegree(){
       console.log(this.degreeSpan)
       if(this.degreeSpan === "C"){
@@ -83,39 +100,56 @@ export default {
     }
   }
 }
+// export default {
+//   async asyncData ({ $http }) {
+//     const test = await $http.$get('/api/test')
+//     return {
+//       test
+//     }
+//   },
+//   mounted: function(){
+//     console.log('mounted')
+//   }
+// }
 </script>
 
-<style>
+<style scoped>
 .container {
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items:center;
-    background: linear-gradient(rgb(47,150,163), rgb(48,62,143));
-    font-family: sans-serif;
-    color: white;
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 }
-.location,
-.temperature {
-    height: 30vh;
-    width: 50%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
+
+.title {
+  font-family:
+    'Quicksand',
+    'Source Sans Pro',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  display: block;
+  font-weight: 300;
+  font-size: 100px;
+  color: #35495e;
+  letter-spacing: 1px;
 }
-.temperature {
-    flex-direction: column;
+
+.subtitle {
+  font-weight: 300;
+  font-size: 42px;
+  color: #526488;
+  word-spacing: 5px;
+  padding-bottom: 15px;
 }
-.degree-section {
-    display: flex;
-    align-items: center;
-}
-.degree-section span {
-    margin: 10px;
-    font-size: 30px;
-}
-.degree-section h2 {
-    font-size: 40px;
+
+.links {
+  padding-top: 15px;
 }
 </style>
