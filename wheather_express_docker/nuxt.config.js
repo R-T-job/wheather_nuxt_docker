@@ -1,4 +1,4 @@
-
+require('dotenv').config()
 export default {
   /*
   ** Nuxt rendering mode
@@ -50,6 +50,7 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/dotenv'
   ],
   /*
   ** Build configuration
@@ -58,6 +59,6 @@ export default {
   build: {
   },
   env: {
-    appid: "9aa48215a10b18b7de567a747bb16e39"
+    appid: process.env.appid
   }
 }
