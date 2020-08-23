@@ -54,19 +54,19 @@ export default {
             }
           }).then(response => {
             console.log(response)
-              this.temp = response.data.main.temp;
-              const description = response.data.weather[0].description;
+            this.temp = response.data.main.temp;
+            const description = response.data.weather[0].description;
 
-              this.tempratureDegree = this.temp;
-              this.tempratureDescription = description;
+            this.tempratureDegree = this.temp;
+            this.tempratureDescription = description;
 
-              const country = response.data.sys.country
-              const name = response.data.name
+            const country = response.data.sys.country
+            const name = response.data.name
             
-              this.locationTimezone = `${country}/${name}`;
-              const icon = response.data.weather[0].icon;
+            this.locationTimezone = `${country}/${name}`;
+            const icon = response.data.weather[0].icon;
 
-              this.wheatherIconSrc = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+            this.wheatherIconSrc = `http://openweathermap.org/img/wn/${icon}@2x.png`;
           })
           .catch(response => console.log(response))
         });
