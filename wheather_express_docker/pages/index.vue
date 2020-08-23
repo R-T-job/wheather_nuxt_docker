@@ -12,27 +12,19 @@
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
 import Location from '~/components/Location.vue'
+
 import axios from 'axios'
 export default {
   components: {
-    Logo,
     Location
   },
   data () {
     return {
-      lon: null,
-      lat: null,
-      units: null,
-      appid: null,
-
-      temp: null,
-
+      tempCentigrade: null, //摂氏保存用
       tempratureDescription: null,
       tempratureDegree: null,
-      locationTimezone: null,
-      wheatherIconSrc: null,
+
       degreeSection: null,
       degreeSpan: "C",
       location: {
@@ -45,31 +37,31 @@ export default {
     if (process.browser) {
       if ( navigator.geolocation ) {
         navigator.geolocation.getCurrentPosition(position => {
-          console.log(position)
-          this.lon = position.coords.longitude;
-          this.lat = position.coords.latitude;
-          this.appid = process.env.APP_ID;
-          this.units = "metric"
+          let lon = position.coords.longitude;
+          let lat = position.coords.latitude;
+          const appid = process.env.APP_ID;
+          const units = "metric"
           const apiURL = process.env.APP_URL
 
           axios.get(apiURL, {
             params: {
-              lat: this.lat,
-              lon: this.lon,
-              units: this.units,
-              appid: this.appid,
+              lat: lat,
+              lon: lon,
+              units: units,
+              appid: appid,
             }
           }).then(response => {
             console.log(response)
-            this.temp = response.data.main.temp;
+            this.tempCentigrade = response.data.main.temp
+
             const description = response.data.weather[0].description;
 
-            this.tempratureDegree = this.temp;
+            this.tempratureDegree = this.tempCentigrade;
             this.tempratureDescription = description;
 
+            //　国、地域名取得
             const country = response.data.sys.country
             const name = response.data.name
-            
             // 地域ごとの時間および天気
             this.location.locationTimezone = `${country}/${name}`;
 
@@ -80,19 +72,18 @@ export default {
         });
       }
     } else {
-      locationTimezone = "hey dis is not working because resons"
+      this.location.locationTimezone = "hey dis is not working because resons"
     }
   },
   methods: {
     changeDegree(){
-      console.log(this.degreeSpan)
       if(this.degreeSpan === "C"){
         this.degreeSpan = "F";
-        let farenheit = (this.temp) * (9 / 5) + 32
+        let farenheit = (this.tempCentigrade) * (9 / 5) + 32
         this.tempratureDegree = Math.floor(farenheit);
       } else {
         this.degreeSpan = "C";
-        this.tempratureDegree = this.temp;
+        this.tempratureDegree = this.tempCentigrade;
       }
     }
   }
@@ -110,7 +101,6 @@ export default {
     font-family: sans-serif;
     color: white;
 }
-.location,
 .temperature {
     height: 30vh;
     width: 50%;
