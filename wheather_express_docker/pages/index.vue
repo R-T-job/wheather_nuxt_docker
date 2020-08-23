@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <div class="location">
-      <h1 class="location-timezone">{{ locationTimezone }}</h1>
-      <img class="wheather-icon" :src="wheatherIconSrc">
-    </div>
+    <Location v-bind="location"/>
     <div class="temperature" @click="changeDegree()">
       <div class="degree-section">
         <h2 class="temprature-degree">{{ tempratureDegree }}</h2>
@@ -15,8 +12,14 @@
 </template>
 
 <script>
-import axios from "axios"
+import Logo from '~/components/Logo.vue'
+import Location from '~/components/Location.vue'
+import axios from 'axios'
 export default {
+  components: {
+    Logo,
+    Location
+  },
   data () {
     return {
       lon: null,
@@ -32,6 +35,10 @@ export default {
       wheatherIconSrc: null,
       degreeSection: null,
       degreeSpan: "C",
+      location: {
+        locationTimezone: null,
+        wheatherIconSrc: null
+      }
     }
   },
   mounted () {
@@ -63,10 +70,11 @@ export default {
             const country = response.data.sys.country
             const name = response.data.name
             
-            this.locationTimezone = `${country}/${name}`;
-            const icon = response.data.weather[0].icon;
+            // 地域ごとの時間および天気
+            this.location.locationTimezone = `${country}/${name}`;
 
-            this.wheatherIconSrc = `http://openweathermap.org/img/wn/${icon}@2x.png`;
+            const icon = response.data.weather[0].icon;
+            this.location.wheatherIconSrc = `http://openweathermap.org/img/wn/${icon}@2x.png`;
           })
           .catch(response => console.log(response))
         });
