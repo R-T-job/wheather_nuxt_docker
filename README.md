@@ -1,3 +1,5 @@
+ブラウザのADsenceをOFFしてください。URL:  
+https://r-t-wheather-app.web.app/
 
 # init
 ### docker-compose編集
