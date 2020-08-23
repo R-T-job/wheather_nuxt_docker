@@ -1,35 +1,30 @@
 <template>
   <div class="container">
     <Location v-bind="location"/>
-    <div class="temperature" @click="changeDegree()">
-      <div class="degree-section">
-        <h2 class="temprature-degree">{{ tempratureDegree }}</h2>
-        <span>{{ degreeSpan }}</span>
-      </div>
-      <div class="temprature-description">{{ tempratureDescription }}</div>
-    </div>
+    <Temperature v-bind="temperature"/>
   </div>
 </template>
 
 <script>
 import Location from '~/components/Location.vue'
+import Temperature from '~/components/Temperature.vue'
 
 import axios from 'axios'
 export default {
   components: {
-    Location
+    Location,
+    Temperature
   },
   data () {
     return {
-      tempCentigrade: null, //摂氏保存用
-      tempratureDescription: null,
-      tempratureDegree: null,
-
-      degreeSection: null,
-      degreeSpan: "C",
+      temperature: {
+        tempCentigrade: null, // 摂氏保存用
+        tempratureDegree: null, // 天気
+        tempratureDescription: null, // 天気詳細
+      },
       location: {
-        locationTimezone: null,
-        wheatherIconSrc: null
+        locationTimezone: null, // TimeZone
+        wheatherIconSrc: null, // icon格納
       }
     }
   },
@@ -43,6 +38,7 @@ export default {
           const units = "metric"
           const apiURL = process.env.APP_URL
 
+          // 天気API取得
           axios.get(apiURL, {
             params: {
               lat: lat,
@@ -52,12 +48,13 @@ export default {
             }
           }).then(response => {
             console.log(response)
-            this.tempCentigrade = response.data.main.temp
+            
+            // 
+            this.temperature.tempCentigrade = response.data.main.temp
+            this.temperature.tempratureDegree = this.temperature.tempCentigrade;
 
             const description = response.data.weather[0].description;
-
-            this.tempratureDegree = this.tempCentigrade;
-            this.tempratureDescription = description;
+            this.temperature.tempratureDescription = description;
 
             //　国、地域名取得
             const country = response.data.sys.country
@@ -74,18 +71,6 @@ export default {
     } else {
       this.location.locationTimezone = "hey dis is not working because resons"
     }
-  },
-  methods: {
-    changeDegree(){
-      if(this.degreeSpan === "C"){
-        this.degreeSpan = "F";
-        let farenheit = (this.tempCentigrade) * (9 / 5) + 32
-        this.tempratureDegree = Math.floor(farenheit);
-      } else {
-        this.degreeSpan = "C";
-        this.tempratureDegree = this.tempCentigrade;
-      }
-    }
   }
 }
 </script>
@@ -101,25 +86,5 @@ export default {
     font-family: sans-serif;
     color: white;
 }
-.temperature {
-    height: 30vh;
-    width: 50%;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-.temperature {
-    flex-direction: column;
-}
-.degree-section {
-    display: flex;
-    align-items: center;
-}
-.degree-section span {
-    margin: 10px;
-    font-size: 30px;
-}
-.degree-section h2 {
-    font-size: 40px;
-}
+
 </style>
