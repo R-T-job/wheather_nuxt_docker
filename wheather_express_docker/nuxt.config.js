@@ -50,6 +50,7 @@ export default {
   ** Nuxt.js modules
   */
   modules: [
+    '@nuxtjs/axios',
     '@nuxtjs/dotenv'
   ],
   /*
@@ -59,6 +60,7 @@ export default {
   build: {
   },
   env: {
-    appid: process.env.appid
+    APP_ID: process.env.APP_ID,
+    APP_URL: process.env.APP_URL
   }
 }

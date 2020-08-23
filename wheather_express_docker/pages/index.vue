@@ -15,6 +15,7 @@
 </template>
 
 <script>
+import axios from "axios"
 export default {
   data () {
     return {
@@ -40,29 +41,34 @@ export default {
           console.log(position)
           this.lon = position.coords.longitude;
           this.lat = position.coords.latitude;
-          this.appid = process.env.appid;
+          this.appid = process.env.APP_ID;
           this.units = "metric"
-          const api = `https://api.openweathermap.org/data/2.5/weather?lat=${this.lat}&lon=${this.lon}&units=${this.units}&appid=${this.appid}`
-          fetch(api)
-            .then(response => {
-              return response.json();
-            })
-            .then(data => {
-              console.log(data)
-              this.temp = data.main.temp;
-              const description = data.weather[0].description;
+          const apiURL = process.env.APP_URL
+
+          axios.get(apiURL, {
+            params: {
+              lat: this.lat,
+              lon: this.lon,
+              units: this.units,
+              appid: this.appid,
+            }
+          }).then(response => {
+            console.log(response)
+              this.temp = response.data.main.temp;
+              const description = response.data.weather[0].description;
 
               this.tempratureDegree = this.temp;
               this.tempratureDescription = description;
 
-              const country = data.sys.country
-              const name = data.name
+              const country = response.data.sys.country
+              const name = response.data.name
             
               this.locationTimezone = `${country}/${name}`;
-              const icon = data.weather[0].icon;
+              const icon = response.data.weather[0].icon;
 
               this.wheatherIconSrc = `http://openweathermap.org/img/wn/${icon}@2x.png`;
-            })
+          })
+          .catch(response => console.log(response))
         });
       }
     } else {
